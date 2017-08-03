@@ -1,18 +1,16 @@
 import {connect} from 'react-redux';
-
-import * as types from '../constant/actiontype.js';
 import {default as TodoList} from '../component/todolist.component.js';
 import {toggleTodo} from '../action/action.js';
 
 const getVisibleTodos = (todos,filter) => {
   switch (filter) {
-    case types.SHOW_ALL:
+    case 'all':
       return todos;
-    case types.SHOW_COMPLETED:
+    case 'completed':
       return todos.filter(
         t => t.completed
       );
-    case types.SHOW_ACTIVE:
+    case 'active':
       return todos.filter(
         t => !t.completed
       );
@@ -21,11 +19,11 @@ const getVisibleTodos = (todos,filter) => {
   }
 }
 //take the props that depends upon state obj or store.
-const mapPropsToState = (state) => {
+const mapPropsToState = (state,ownProps) => {
   return {
     todos: getVisibleTodos(
       state.todos,
-      state.visibilityFilter
+      ownProps.filter
     )
   }
 }
