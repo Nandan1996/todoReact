@@ -20,7 +20,7 @@ const getVisibleTodos = (todos,filter) => {
   }
 }
 //take the props that depends upon state obj or store.
-const mapPropsToState = (state,{match:{params}}) => {
+const mapStateToProps = (state,{match:{params}}) => {
   return {
     todos: getVisibleTodos(
       state.todos,
@@ -29,13 +29,5 @@ const mapPropsToState = (state,{match:{params}}) => {
   }
 }
 
-//take the props that depends upon dispatch function
-const mapPropsToDispatch = (dispatch) => {
-  return {
-    onTodoClick: (id) => {
-      dispatch(toggleTodo(id));
-    }
-  };
-}
-const VisibleToDoList = withRouter(connect(mapPropsToState, mapPropsToDispatch)(TodoList));
+const VisibleToDoList = withRouter(connect(mapStateToProps, {onTodoClick:toggleTodo})(TodoList));
 export default VisibleToDoList;
