@@ -3,7 +3,7 @@ import React from 'react';
 import Todo from './todo.component.js';
 const TodoList = ({todos,onTodoClick}) => {
     return (
-        <ul>
+        <ul style={{width:'200px'}}>
             {todos.map(todo =>
                 <Todo
                     key={todo.id}
