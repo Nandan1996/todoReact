@@ -1,59 +1,56 @@
+import {combineReducers} from 'redux';
+
 import * as actionTypes from '../constant/actiontype.js';
+import todo  from './todo.reducer.js';
 
-const todo = (state, action) => {
+//may incur sync problem when using several array with same todo
+const byId = (state = {}, action) => {
   switch (action.type) {
     case actionTypes.ADD_TODO:
-      return {
-        id: action.id,
-        text: action.text,
-        completed: false
-      };
     case actionTypes.TOGGLE_TODO:
-      if (state.id !== action.id) {
-        return state;
-      }
-
       return {
         ...state,
-        completed: !state.completed
+        [action.id]: todo(state[action.id],action)
       };
     default:
       return state;
   }
 };
 
-const todos = (state = [], action) => {
-  switch (action.type) {
-    case actionTypes.ADD_TODO:
-      return [
-        ...state,
-        todo(undefined, action)
-      ];
-    case actionTypes.TOGGLE_TODO:
-      return state.map(t =>
-        todo(t, action)
-      );
-    default:
-      return state;
-  }
-};
+const allIds = (state = [], action) => {
+	switch(action.type){
+		case actionTypes.ADD_TODO:
+			return [...state,action.id];
+		default:
+			return state;
+	}
+}
 
+const todos = combineReducers({
+	byId,
+	allIds
+})
 export default todos;
 
 //selector
+const getAllTodos = (state) => {
+	return state.allIds.map(id => state.byId[id]);
+}
+
 export const getVisibleTodos = (state,filter) => {
-  switch (filter) {
-    case 'all':
-      return state;
-    case 'completed':
-      return state.filter(
-        t => t.completed
-      );
-    case 'active':
-      return state.filter(
-        t => !t.completed
-      );
-    default:
-      throw new Error(`unknown filter ${filter}.`);
-  }
+	const allTodos = getAllTodos(state);
+	switch (filter) {
+	case 'all':
+		return allTodos;
+	case 'completed':
+		return allTodos.filter(
+		t => t.completed
+		);
+	case 'active':
+		return allTodos.filter(
+		t => !t.completed
+		);
+	default:
+		throw new Error(`unknown filter ${filter}.`);
+	}
 }
