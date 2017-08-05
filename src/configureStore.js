@@ -1,12 +1,12 @@
 import { createStore } from 'redux';
 import throttle from 'lodash/throttle';
 
-import {default as todoApp} from './reducer/statereducers.js';
+import {default as rootReducer} from './reducer/root.reducer.js';
 import {loadState, saveState} from './service/localstorage.service.js';
 
 const congigureStore = () =>{
     const persistedState = loadState();
-    const store = createStore(todoApp,persistedState);
+    const store = createStore(rootReducer,persistedState);
 
     store.subscribe(throttle(() =>{
         saveState({

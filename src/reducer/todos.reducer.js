@@ -1,5 +1,3 @@
-import {combineReducers} from 'redux';
-
 import * as actionTypes from '../constant/actiontype.js';
 
 const todo = (state, action) => {
@@ -40,8 +38,22 @@ const todos = (state = [], action) => {
   }
 };
 
-const todoApp = combineReducers({
-  todos
-});
+export default todos;
 
-export default todoApp;
+//selector
+export const getVisibleTodos = (state,filter) => {
+  switch (filter) {
+    case 'all':
+      return state;
+    case 'completed':
+      return state.filter(
+        t => t.completed
+      );
+    case 'active':
+      return state.filter(
+        t => !t.completed
+      );
+    default:
+      throw new Error(`unknown filter ${filter}.`);
+  }
+}
