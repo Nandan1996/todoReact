@@ -16,11 +16,23 @@ const  addLogingToDispatch = (store) => {
         return returnValue;
     }
 }
+
+const addPromiseSupportToDispatch = (store) => {
+    const rawDispatch = store.dispatch;
+    return (action) => {
+        if(typeof action.then === 'function'){
+            return action.then(rawDispatch);
+        }
+        rawDispatch(action);
+    }
+}
 const congigureStore = () =>{
     const store = createStore(rootReducer);
     if(process.env.NODE_ENV !== 'production'){
         store.dispatch = addLogingToDispatch(store);
     }
+
+    store.dispatch = addPromiseSupportToDispatch(store);
     return store;
 }
  export default congigureStore;
