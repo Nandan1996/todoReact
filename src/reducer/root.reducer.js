@@ -1,10 +1,20 @@
 import {combineReducers} from 'redux';
-import todos,* as fromTodos from './todos.reducer.js';
 
-const todoApp = combineReducers({
-  todos
+import byId,* as fromById from './byid.js';
+import createList, * as fromList from './createlist.js';
+
+const listByFilter = combineReducers({
+	all: createList('all'),
+	active:createList('active'),
+	completed: createList('completed')
 });
+const todos = combineReducers({
+	byId,
+	listByFilter
+})
+export default todos;
 
-export default todoApp;
-
-export const getVisibleTodos = (state,filter) => fromTodos.getVisibleTodos(state.todos,filter);
+export const getVisibleTodos = (state,filter) => {
+	const ids = fromList.getIds(state.listByFilter[filter]);
+	return ids.map(id => fromById.getTodo(state.byId,id));
+}
