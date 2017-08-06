@@ -3,24 +3,30 @@ import {v4} from 'node-uuid';
 import * as api from '../service/api.js';
 import {getIsFetching} from '../reducer/root.reducer.js';
 
-const receiveTodos = (filter,response) => ({
-    type: types.RECEIVE_TODO,
-    filter,
-    response
-});
-const requestTodos = (filter) => ({
-    type: types.REQUEST_TODO,
-    filter
-});
 //returns a promise which resolves to an action returned by receiveTodos
 //such function are called thunk, it returns function.
 export const fetchTodos = (filter) => (dispatch,getState) =>{
     if(getIsFetching(getState(),filter)){
-        return;
+        return Promise.resolve();
     }
-    dispatch(requestTodos(filter));
-    return api.fetchTodos(filter).then(response => 
-        dispatch(receiveTodos(filter,response))
+    dispatch({
+        type: types.FETCH_TODOS_REQUEST,
+        filter
+    });
+    return api.fetchTodos(filter).then(response => {
+            return dispatch({
+                type: types.FETCH_TODOS_SUCCESS,
+                filter,
+                response
+            })
+        },
+        error => {
+            return dispatch({
+                type: types.FETCH_TODOS_FAILURE,
+                filter,
+                message: error.message || 'Something wint wrong!'
+            });
+        }
     );
 }
 export const addTodo = (value) => {

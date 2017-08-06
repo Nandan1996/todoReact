@@ -7,7 +7,7 @@ const createList = (filter) => {
         if(action.filter !== filter)
             return state;
         switch(action.type){
-            case actionTypes.RECEIVE_TODO:
+            case actionTypes.FETCH_TODOS_SUCCESS:
                 return action.response.map(todo => todo.id);
             default:
                 return state;
@@ -18,9 +18,10 @@ const createList = (filter) => {
         if(action.filter !== filter)
             return state;
         switch(action.type){
-            case actionTypes.REQUEST_TODO:
+            case actionTypes.FETCH_TODOS_REQUEST:
                 return true;
-            case actionTypes.RECEIVE_TODO:
+            case actionTypes.FETCH_TODOS_SUCCESS:
+            case actionTypes.FETCH_TODOS_FAILURE:
                 return false;
             default:
                 return state;

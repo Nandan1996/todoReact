@@ -1,12 +1,7 @@
 import { createStore,applyMiddleware } from 'redux';
 import {default as logger} from 'redux-logger';
+import {default as thunk} from 'redux-thunk';
 import {default as rootReducer} from './reducer/root.reducer.js';
-
-const thunk = (store) => (next) => (action) => {
-    if(typeof action === 'function')
-        return action(store.dispatch,store.getState);
-    return next(action);
-}
 
 const congigureStore = () =>{
     //order in which action propogates throw middlewares.
