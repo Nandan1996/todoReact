@@ -7,6 +7,11 @@ const byId = (state = {}, action) => {
 			const nextState = {...state};
 			action.response.forEach(todo => nextState[todo.id] = todo);
 			return nextState;
+        case actionTypes.ADD_TODO_SUCCESS:
+            return {
+                ...state,
+                [action.response.id]: action.response
+            };
 		default:
 			return state;
 	}

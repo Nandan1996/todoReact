@@ -1,5 +1,4 @@
 import * as types from '../constant/actiontype.js';
-import {v4} from 'node-uuid';
 import * as api from '../service/api.js';
 import {getIsFetching} from '../reducer/root.reducer.js';
 
@@ -29,17 +28,17 @@ export const fetchTodos = (filter) => (dispatch,getState) =>{
         }
     );
 }
-export const addTodo = (value) => {
-	return {
-        type: types.ADD_TODO,
-        id: v4(),
-        text: value
-    };
-}
+export const addTodo = (text) => (dispatch) => 
+    api.addTodo(text).then(response => {
+        dispatch({
+            type: types.ADD_TODO_SUCCESS,
+            response
+        });
+    });
 
 export const toggleTodo = (id) => {
 	return {
-		type: types.TOGGLE_TODO,
+		type: types.TOGGLE_TODO_SUCCESS,
 		id
     };
 }
