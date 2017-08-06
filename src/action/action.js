@@ -7,7 +7,10 @@ const receiveTodos = (filter,response) => ({
     filter,
     response
 });
-
+export const requestTodos = (filter) => ({
+    type: types.REQUEST_TODO,
+    filter
+});
 //returns a promise which resolves to an action returned by receiveTodos
 export const fetchTodos = (filter) => 
     api.fetchTodos(filter).then(response => 
