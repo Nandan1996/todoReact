@@ -7,16 +7,17 @@ const receiveTodos = (filter,response) => ({
     filter,
     response
 });
-export const requestTodos = (filter) => ({
+const requestTodos = (filter) => ({
     type: types.REQUEST_TODO,
     filter
 });
 //returns a promise which resolves to an action returned by receiveTodos
-export const fetchTodos = (filter) => 
-    api.fetchTodos(filter).then(response => 
-        receiveTodos(filter,response)
+export const fetchTodos = (filter) => (dispatch) =>{
+    dispatch(requestTodos(filter));
+    return api.fetchTodos(filter).then(response => 
+        dispatch(receiveTodos(filter,response))
     );
-
+}
 export const addTodo = (value) => {
 	return {
         type: types.ADD_TODO,
