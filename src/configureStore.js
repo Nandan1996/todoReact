@@ -1,38 +1,14 @@
-import { createStore } from 'redux';
-
+import { createStore,applyMiddleware } from 'redux';
+import {default as promise} from 'redux-promise';
+import {default as logger} from 'redux-logger';
 import {default as rootReducer} from './reducer/root.reducer.js';
-const  addLogingToDispatch = (store) => {
-    const rawDispatch = store.dispatch;
-    if(!console.group){
-        return rawDispatch;
-    }
-    return (action) => {
-        console.group(action.type);
-        console.log('%c prev state','color: gray',store.getState());
-        console.log('%c action','color:blue',action);
-        const returnValue = rawDispatch(action);
-        console.log('%c next state','color: green',store.getState());
-        console.groupEnd(action.type);
-        return returnValue;
-    }
-}
 
-const addPromiseSupportToDispatch = (store) => {
-    const rawDispatch = store.dispatch;
-    return (action) => {
-        if(typeof action.then === 'function'){
-            return action.then(rawDispatch);
-        }
-        rawDispatch(action);
-    }
-}
 const congigureStore = () =>{
-    const store = createStore(rootReducer);
+    //order in which action propogates throw middlewares.
+    const middlewares = [promise];
     if(process.env.NODE_ENV !== 'production'){
-        store.dispatch = addLogingToDispatch(store);
+        middlewares.push(logger);
     }
-
-    store.dispatch = addPromiseSupportToDispatch(store);
-    return store;
+    return createStore(rootReducer,applyMiddleware(...middlewares));
 }
  export default congigureStore;

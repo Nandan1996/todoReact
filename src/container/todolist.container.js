@@ -5,7 +5,6 @@ import {withRouter} from 'react-router-dom';
 import {getVisibleTodos} from '../reducer/root.reducer.js';
 import {default as TodoList} from '../component/todolist.component.js';
 import * as actions from '../action/action.js';
-import {fetchTodos} from '../service/api.js';
 
 //take the props that depends upon state obj or store.
 const mapStateToProps = (state,{match:{params:{filter='all'}}}) => {
